@@ -7,6 +7,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>게시판</title>
+		<link rel="shortcut icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
+    	<link rel="icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
 	</head>
 	<body>
 		<div>

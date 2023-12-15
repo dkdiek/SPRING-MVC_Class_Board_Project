@@ -7,6 +7,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>게시판</title>
+		<link rel="shortcut icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
+    	<link rel="icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
 	</head>
 	<body>
 		<div>
@@ -25,6 +27,13 @@
 					</li>
 				</c:forEach>
 			</ul>
+		</div>
+		<div style="text-align: center">
+			<c:forEach var="page" begin="1" end="${totalPage }">
+				<span style = "margin : 10px">
+					<a href="<c:url value='/board/free/listView?page=${page }'/>">[${page }]</a>
+				</span>
+			</c:forEach>
 		</div>
 	</body>
 </html>

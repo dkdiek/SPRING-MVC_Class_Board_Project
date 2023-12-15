@@ -10,3 +10,14 @@ CREATE TABLE `free` (
   `del_yn` char(1) DEFAULT 'N',
   PRIMARY KEY (`seq`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3
+
+
+
+CREATE TABLE `free_reply` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `content` varchar(600) NOT NULL,
+  `write_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `f_seq` int NOT NULL,
+  PRIMARY KEY (`seq`),
+  KEY `idx_reply_f_seq` (`f_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3

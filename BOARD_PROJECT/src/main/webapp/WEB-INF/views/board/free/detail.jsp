@@ -7,6 +7,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>게시판</title>
+		<link rel="shortcut icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
+    	<link rel="icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
 	</head>
 	<body>
 		<div>
@@ -44,6 +46,16 @@
 			<input type="button" id="btnUpd" value="수정">
 			<input type="button" id="btnDel" value="삭제">
 		</div>
+		<hr>
+		<div>
+			<input type="text" id="repCont" style="width:70%" placeholder="댓글을 입력하시오">
+			<input type="button" id="btnRepWrite" value="작성">
+		</div>
+		<div>
+			<ul id="repArea">
+			</ul>
+		</div>
+		
 		<form id="frm1" action="<c:url value='/board/free/delete'/>" method="post">
 			<input type="hidden" name="seq" id="seq">
 		</form>
@@ -59,6 +71,7 @@
 		 			document.getElementById('frm1').submit();
 		 		}
 		 	});
+		 	
 			document.getElementById('btnRec').addEventListener('click',function(){
 			 	$.ajax({
 			 		  method: 'POST'
@@ -79,6 +92,7 @@
 			 		    }
 		 		  	});
 		 	});
+			
 			document.getElementById('btnNRec').addEventListener('click',function(){
 			 	$.ajax({
 			 		  method: 'POST'
@@ -97,6 +111,55 @@
 				 		    }
 		 		  	});
 		 	});
+			
+			document.getElementById('btnRepWrite').addEventListener('click',function(){
+			 	$.ajax({
+			 		  method: 'POST'
+			 		  ,url: '<c:url value="/board/free/addRep"/>'
+			 		  ,data: {
+			 			  	f_seq: '<c:out value="${free.seq }"/>'
+			 			  	,content: $('#repCont').val()
+	 			  		}
+			 		})
+			 		  .done(function( msg ) {
+			 			  console.log(msg);
+			 			  if ('success' == msg.result) {
+			 				  $('#repCont').val('');
+		 					  $('#repArea').html('');
+			 				  let repHtml = '';
+			 				  $.each(msg.data, function(i, reply){
+			 					  repHtml += '<li>' + reply.content + " | " + reply.write_date + '</li>';
+			 				  });
+		 					  $('#repArea').append(repHtml);
+			 			  } else {
+			 		    	alert('서버 장애가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+			 			  }
+		 		  	});
+		 	});
+			
+			$(function(){
+				$.ajax({
+			 		  method: 'POST'
+			 		  ,url: '<c:url value="/board/free/getRep"/>'
+			 		  ,data: {
+			 			  	f_seq: '<c:out value="${free.seq }"/>'
+	 			  		}
+			 		})
+			 		  .done(function( msg ) {
+			 			  console.log(msg);
+			 			  if ('success' == msg.result) {
+			 				  $('#repCont').val('');
+		 					  $('#repArea').html('');
+			 				  let repHtml = '';
+			 				  $.each(msg.data, function(i, reply){
+			 					  repHtml += '<li>' + reply.content + " | " + reply.write_date + '</li>';
+			 				  });
+		 					  $('#repArea').append(repHtml);
+			 			  } else {
+			 		    	alert('서버 장애가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+			 			  }
+		 		  	});
+			});
 		 	
 		</script>
 	</body>
