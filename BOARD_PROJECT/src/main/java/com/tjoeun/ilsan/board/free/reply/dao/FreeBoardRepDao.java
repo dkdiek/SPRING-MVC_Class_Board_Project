@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface FreeBoardRepDao {
 	
-		public int insert(Map map);
+	public int insert(Map map);
 
 	public List<Map> select(Map map);
 
