@@ -7,12 +7,23 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>게시판</title>
-		<link rel="shortcut icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
-    	<link rel="icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
+		<style>
+			.spanPage {
+			    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+			}
+		    .hoveredPage {
+	            background-color: blue; /* 마우스 오버 시 배경 색상을 빨간색으로 변경 (원하는 색상으로 수정) */
+	            color: #fff; /* 마우스 오버 시 텍스트 색상을 흰색으로 변경 (원하는 색상으로 수정) */
+	        }
+		</style>
 	</head>
 	<body>
 		<div>
-			<H1>자유 게시판</H1>
+			<h1>자유게시판</h1>
+		</div>
+		<div>
+			<input type="text" id="titleSearch" value="<c:out value="${rp.title }"/>" placeholder="제목을 입력하세요" style="width:30%">
+			<input type="button" id="btnSearch" value="조회">
 		</div>
 		<div>
 			<ul>
@@ -30,10 +41,43 @@
 		</div>
 		<div style="text-align: center">
 			<c:forEach var="page" begin="1" end="${totalPage }">
-				<span style = "margin : 10px">
-					<a href="<c:url value='/board/free/listView?page=${page }'/>">[${page }]</a>
-				</span>
+				<c:if test="${page == rp.page}">
+					<span class="spanPage" data-page="${page }" style="margin:10px; color:red; font-weight:bold">[${page }]</span>
+				</c:if>
+				<c:if test="${page != rp.page}">
+					<span class="spanPage" data-page="${page }" style="margin:10px;">[${page }]</span>
+				</c:if>
 			</c:forEach>
 		</div>
+		<form id="frm1" action="<c:url value='/board/free/listView'/>" method="post">
+			<input type="hidden" id="page" name="page">
+			<input type="hidden" id="title" name="title">
+			<input type="hidden" id="fWrite" name="fWrite">
+			<input type="hidden" id="tWrite" name="tWrite">
+		</form>
+		<script src="<c:url value='/cdn/js/jquery-3.7.1.min.js'/>"></script>
+		<script>
+			 $('.spanPage').on('mouseenter', function () {
+		            $(this).addClass('hoveredPage'); // 마우스 오버 시 hoveredPage 클래스 추가
+		        }).on('mouseleave', function () {
+		            $(this).removeClass('hoveredPage'); // 마우스 떠날 때 hoveredPage 클래스 제거
+		        });
+		
+			$('.spanPage').on('click', function(){
+				
+	            $('.spanPage').removeClass('hoveredPage'); // 다른 페이지를 클릭하면 이전에 마우스 오버한 페이지의 스타일을 초기화
+
+				$('#page').val($(this).data('page'));
+				$('#title').val($('#titleSearch').val());
+				$('#frm1').submit();
+			});
+		
+			$('#btnSearch').on('click', function(){
+				$('#title').val($('#titleSearch').val());
+				$('#frm1').submit();
+			});
+		</script>
+		
+		
 	</body>
 </html>

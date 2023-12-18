@@ -9,6 +9,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 FROM free
 		 where 1=1
 	 	and del_yn = 'N'
+	 	 <if test="null != fWrite and '' != fWrite">
+		 	<![CDATA[ 
+				 and date_format(write_date, '%Y%m%d') >= #{fWrite}
+			 ]]>
+		 </if>
+		 <if test="null != tWrite and '' != tWrite">
+		 	 <![CDATA[ 
+    		 	and date_format(write_date, '%Y%m%d') <= #{tWrite}
+			]]>
+		 </if>
+		 <if test="null != title and '' != title">
+			 and title like concat( '%', #{title},'%' )
+		 </if>
 	</select>
 	
 	<select id="select" resultType="map" parameterType="map">
@@ -26,10 +39,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 <if test="null != seq">
 		 	and seq = #{seq}
 		 </if>
-		 	and del_yn = 'N'
+		 <if test="null != fWrite and '' != fWrite">
+		 	<![CDATA[ 
+				 and date_format(write_date, '%Y%m%d') >= #{fWrite}
+			 ]]>
+		 </if>
+		 <if test="null != tWrite and '' != tWrite">
+		 	 <![CDATA[ 
+    		 	and date_format(write_date, '%Y%m%d') <= #{tWrite}
+			]]>
+		 </if>
+		 <if test="null != title and '' != title">
+			 and title like concat( '%', #{title},'%' )
+		 </if>
+ 		 and del_yn = 'N'
 		 order by seq desc
- 		limit #{limit}
-		offset #{offset}
+ 		 limit #{limit}
+		 offset #{offset}
 	</select>
 
 	<insert id="write" parameterType="map">
