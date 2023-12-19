@@ -21,3 +21,11 @@ CREATE TABLE `free_reply` (
   PRIMARY KEY (`seq`),
   KEY `idx_reply_f_seq` (`f_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE `file` (
+  `seq` int NOT NULL AUTO_INCREMENT,
+  `o_filename` varchar(500) NOT NULL,
+  `n_filename` varchar(500) NOT NULL,
+  `f_seq` int NOT NULL,
+  PRIMARY KEY (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3

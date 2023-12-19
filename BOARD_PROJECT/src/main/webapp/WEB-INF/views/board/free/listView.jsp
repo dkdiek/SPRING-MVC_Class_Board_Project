@@ -7,6 +7,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>게시판</title>
+	  	<link rel="stylesheet" href="<c:url value='/cdn/css/jquery-ui.min.css'/>">
 		<style>
 			.spanPage {
 			    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
@@ -22,7 +23,12 @@
 			<h1>자유게시판</h1>
 		</div>
 		<div>
-			<input type="text" id="titleSearch" value="<c:out value="${rp.title }"/>" placeholder="제목을 입력하세요" style="width:30%">
+			기간 선택:
+			<input type="text" id="fCalendar" style="width:100px" value="<c:out value='${rp.fWrite }'/>">
+			~ <input type="text" id="tCalendar" style="width:100px" value="<c:out value='${rp.tWrite }'/>"> 
+		</div>
+		<div>
+			<input type="text" id="titleSearch" value="<c:out value='${rp.title }'/>" placeholder="제목을 입력하세요" style="width:30%">
 			<input type="button" id="btnSearch" value="조회">
 		</div>
 		<div>
@@ -56,7 +62,18 @@
 			<input type="hidden" id="tWrite" name="tWrite">
 		</form>
 		<script src="<c:url value='/cdn/js/jquery-3.7.1.min.js'/>"></script>
+		<script src="<c:url value='/cdn/js/jquery-ui.min.js'/>"></script>
 		<script>
+
+			 $( function() {
+				    $( "#fCalendar" ).datepicker({
+				    	dateFormat: 'yymmdd'
+				    });
+				    $( "#tCalendar" ).datepicker({
+				    	dateFormat: 'yymmdd'
+				    });
+			  } );
+		 
 			 $('.spanPage').on('mouseenter', function () {
 		            $(this).addClass('hoveredPage'); // 마우스 오버 시 hoveredPage 클래스 추가
 		        }).on('mouseleave', function () {
@@ -67,15 +84,18 @@
 				
 	            $('.spanPage').removeClass('hoveredPage'); // 다른 페이지를 클릭하면 이전에 마우스 오버한 페이지의 스타일을 초기화
 
-				$('#page').val($(this).data('page'));
+				$('#page').val($(this).data('page')); // this 대신 $('.spanPage')로 써도됨
 				$('#title').val($('#titleSearch').val());
 				$('#frm1').submit();
 			});
 		
 			$('#btnSearch').on('click', function(){
 				$('#title').val($('#titleSearch').val());
+				$('#fWrite').val($('#fCalendar').val());
+				$('#tWrite').val($('#tCalendar').val());
 				$('#frm1').submit();
 			});
+			
 		</script>
 		
 		

@@ -57,8 +57,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		 limit #{limit}
 		 offset #{offset}
 	</select>
-
-	<insert id="write" parameterType="map">
+	
+	<!-- keyProperty에 원하는 리턴받을 컬럼 pk아니어도 상관없음 -->
+	<insert id="write" parameterType="map" useGeneratedKeys="true" keyProperty="seq">
 		insert into free(
 			title
 			, content
