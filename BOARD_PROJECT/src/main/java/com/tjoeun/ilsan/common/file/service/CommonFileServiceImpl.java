@@ -29,18 +29,22 @@ import com.tjoeun.ilsan.common.file.dao.CommonFileDao;
 @Service
 @EnableTransactionManagement
 public class CommonFileServiceImpl implements CommonFileService {
-
+	
 	@Autowired
 	CommonFileDao commonFileDao;
-
-	@Value("${file.upload.path}") // PROJECT.PROERTIES에서 값 가져옴 SERVLET-CONTEXT에 등록
+	
+	@Value("${file.upload.path}")
 	private String fileUploadPath;
 
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.MANDATORY, rollbackFor = { Exception.class })
+	@Transactional(
+			readOnly = false
+			,propagation = Propagation.MANDATORY
+			,rollbackFor = {Exception.class}
+			)
 	public void upload(Map map, MultipartFile mFile) throws Exception {
 		String o_filename = mFile.getOriginalFilename();
-		String n_filename = UUID.randomUUID().toString() + "-" + o_filename;
+		String n_filename = UUID.randomUUID().toString()+ "-" + o_filename;
 		File newFile = new File(fileUploadPath + n_filename);
 		try {
 			mFile.transferTo(newFile);
@@ -52,8 +56,7 @@ public class CommonFileServiceImpl implements CommonFileService {
 		map.put("n_filename", n_filename);
 		map.put("f_seq", map.get("seq"));
 		int result = commonFileDao.insert(map);
-
-		if (1 != result) {
+		if ( 1 != result ) {
 			throw new Exception();
 		}
 	}
@@ -64,42 +67,31 @@ public class CommonFileServiceImpl implements CommonFileService {
 	}
 
 	@Override
-	public void download(Map map, HttpServletResponse res) throws Exception {
+	public void download(Map map, HttpServletResponse res) {
 		try {
-			File file = new File(fileUploadPath + map.get("n_filename".toString()));
-
-			if (!file.exists()) {
-				String errorMessage = "File Not Exist.";
-				System.out.println(errorMessage);
-				OutputStream outputStream = res.getOutputStream();
-				outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
-				outputStream.close();
-				return;
-			}
-
+			Map fMap = commonFileDao.select(map).get(0);
+			File file = new File(fileUploadPath + fMap.get("n_filename").toString());
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 			if (mimeType == null) {
 				mimeType = "application/octet-stream";
 			}
-
 			res.setContentType(mimeType);
-			
-			 // URL 인코딩 적용(변경)
-			String encodedFileName = URLEncoder.encode(map.get("o_filename").toString(), StandardCharsets.UTF_8.toString());
-	        res.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"; filename*=UTF-8''%s", encodedFileName, encodedFileName));
-
-	        // URL 인코딩 적용 전(삭제)
-			//res.setHeader("Content-Disposition", String.format("inline; filename=\"" + map.get("o_filename").toString() + "\""));
-
+			String encodedFileName = URLEncoder.encode(fMap.get("o_filename").toString(), StandardCharsets.UTF_8.toString());
+	        res.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s", encodedFileName, encodedFileName));
 			res.setContentLength((int) file.length());
-
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
 			FileCopyUtils.copy(inputStream, res.getOutputStream());
-			
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
-			throw e;
 		}
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
 }
