@@ -9,6 +9,7 @@
 		<title>게시판</title>
 		<link rel="shortcut icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
     	<link rel="icon" href="/cdn/images/favicon.ico" type="image/x-icon" />
+ 		<link rel="stylesheet" href="<c:url value='/cdn/CLEditor1_4_5/jquery.cleditor.css'/>"/>
 	</head>
 	<body>
 		<div>
@@ -22,7 +23,7 @@
 					<li>제목:<input type="text" name="title" value="<c:out value='${free.title }'/>"></li>
 					<li>내용:<br>
 						<div>
-							<textarea name="content"><c:out value="${free.content }"/></textarea>
+							<textarea name="content" id="content"><c:out value="${free.content }"/></textarea>
 						</div>
 					</li>
 					<li>작성자:<c:out value="${free.writer }"/></li>
@@ -35,12 +36,15 @@
 		<div>
 			<input type="button" id="btnUpd" value="수정 완료">
 		</div>
+		<script src="<c:url value='/cdn/CLEditor1_4_5/jquery.cleditor.min.js'/>"></script>
 		<script>
 		 	document.getElementById('btnUpd').addEventListener('click',function(){
 		 		if( confirm('정말 수정하시겠습니까?') ){
 		 			document.getElementById('frm1').submit();
 		 		}
 		 	});
+		 	
+			$(document).ready(function () { $("#content").cleditor(); });
 		</script>
 	</body>
 </html>
